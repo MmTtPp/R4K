@@ -1,0 +1,314 @@
+To achieve this, I have added a new class for the right-side container (`right-scroll-container`) and a corresponding class for the text (`right-scroll-text`). This mirrors the style of your existing Korean text but positions it on the right side of the screen.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E3J</title>
+    <style>
+        /* Y2K GLOBAL STYLES */
+        body {
+            background-image: url('ps3_bg_purple.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+            background-color: #2b004a; 
+            
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            cursor: crosshair;
+            overflow-x: hidden;
+        }
+
+        /* HORIZONTAL MARQUEE */
+        .marquee-container {
+            width: 100%;
+            background-color: #000;
+            padding: 15px 0;
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 4px dashed #ff00ff;
+            position: relative;
+            z-index: 100;
+        }
+
+        .rainbow-text {
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00de, 0 0 40px #ff00de;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            20% { color: #ff9900; }
+            40% { color: #ffff00; }
+            60% { color: #00ff00; }
+            80% { color: #0099ff; }
+            100% { color: #ff00de; }
+        }
+
+        /* VERTICAL GLITTER SCROLL (LEFT) */
+        .vertical-scroll-container {
+            position: absolute;
+            left: 20px;
+            top: 100px;
+            height: 80vh;
+            width: 60px;
+            z-index: 50;
+            overflow: hidden;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* VERTICAL GLITTER SCROLL (RIGHT) */
+        .right-scroll-container {
+            position: absolute;
+            right: 20px;
+            top: 100px;
+            height: 80vh;
+            width: 60px;
+            z-index: 50;
+            overflow: hidden;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .glitter-text, .right-scroll-text {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #00ffff;
+            writing-mode: vertical-lr;
+            display: inline-block;
+        }
+
+        /* CAMERA BODY */
+        .camera-realistic-container {
+            position: relative;
+            width: 900px; 
+            height: 750px;
+            margin-top: 30px;
+            background-image: url('sony.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0px 0px 30px rgba(255, 0, 255, 0.8));
+        }
+
+        .screen-interface-y2k {
+            position: absolute;
+            top: 36%;    
+            left: 10.5%;   
+            width: 55%;  
+            height: 42.5%; 
+            background-color: #000;
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #photo-display {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            background-color: #000;
+        }
+
+        .screen-ui-y2k {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: lime;
+            font-size: 14px;
+            text-shadow: 0 0 5px lime;
+            z-index: 5;
+        }
+        .rec-stamp {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: red;
+            font-size: 14px;
+            text-shadow: 0 0 5px red;
+            z-index: 5;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .flash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease-out;
+            z-index: 10;
+        }
+
+        .controls-y2k {
+            position: absolute;
+            top: 52%;   
+            right: 8%;
+            width: 18%; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 20;
+        }
+
+        #snap-btn {
+            background-color: #ff00ff;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 6px outset #ffb3ff;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            box-shadow: 0 0 30px #ff00ff, 0 0 10px #00ffff;
+            transition: all 0.1s;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        #snap-btn:active {
+            border-style: inset;
+            box-shadow: 0 0 10px #ff00ff;
+            transform: scale(0.95);
+        }
+
+        #snap-btn:hover {
+            background-color: #00ffff;
+            border-color: #ccffff;
+            box-shadow: 0 0 40px #00ffff, 0 0 20px #ff00ff;
+            color: #000;
+        }
+
+        #snap-btn::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px dashed white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white, 0 0 5px lightpink;
+            pointer-events: none;
+            animation: blink 0.5s infinite alternate;
+        }
+
+        .sticker {
+            position: absolute;
+            font-size: 50px;
+            filter: drop-shadow(3px 3px 0px #fff);
+            pointer-events: none;
+            z-index: 30;
+        }
+        
+        .sticker-1 { top: 180px; left: 0px; transform: rotate(-15deg); }
+        .sticker-2 { bottom: 100px; right: 280px; transform: rotate(25deg); font-size: 40px; }
+        .sticker-3 { top: 150px; right: 10px; font-size: 35px; }
+        .sticker-4 { bottom: 100px; left: 10px; font-size: 45px; transform: rotate(-10deg); }
+    </style>
+</head>
+<body>
+
+    <div class="marquee-container">
+        <marquee scrollamount="15">
+            <span class="rainbow-text">✰ HAPPY BIRTHDAY TO YOU KATOMI!!1!! HAPPY BIRTHDAY TO YOU!!1! ✰</span> 
+            <span class="rainbow-text">MAY YOU GET WHAT YOU WANT! </span> 
+            <span class="rainbow-text">And Have a cool life!</span>
+            <span class="rainbow-text">Keep being a badass vriend! Thanks for being my friend!</span>
+            <span class="rainbow-text">O....eh... dit is nogal onhandig dutch......gewoon doorlopen!</span>
+        </marquee>
+    </div>
+
+    <!-- Vertical Glitter Scroll (Left) -->
+    <div class="vertical-scroll-container">
+        <marquee direction="down" scrollamount="35">
+            <span class="glitter-text">앞으로의 삶에 최고의 행복이 가득하기를 기원합니다!</span>
+        </marquee>
+    </div>
+
+    <!-- Vertical Glitter Scroll (Right) -->
+    <div class="right-scroll-container">
+        <marquee direction="down" scrollamount="110">
+            <span class="right-scroll-text">Je sens au plus profond de moi que tu as du français en toi !</span>
+        </marquee>
+    </div>
+
+    <div class="camera-realistic-container">
+        <div class="sticker sticker-1">🦋</div>
+        <div class="sticker sticker-2">⭐</div>
+        <div class="sticker sticker-3">💗</div>
+        <div class="sticker sticker-4">💋</div>
+
+        <div class="screen-interface-y2k">
+            <div class="screen-ui-y2k">
+                <div>[🔋 99%]</div>
+                <div>SD: 256MB</div>
+            </div>
+            <div class="rec-stamp">🔴 REC</div>
+
+            <img id="photo-display" src="Katomi.png" alt="Current Photo">
+            
+            <div class="flash-overlay" id="flash"></div>
+        </div>
+
+        <div class="controls-y2k">
+            <button id="snap-btn">Snap!</button>
+        </div>
+    </div>
+
+    <script>
+        const myPhotos = [
+            "Katomi.png",
+            "minx.jpg",
+            "Tokio.jpg",
+            "Sumi.jpg"
+        ];
+
+        let currentIndex = 0;
+        
+        const display = document.getElementById('photo-display');
+        const snapBtn = document.getElementById('snap-btn');
+        const flash = document.getElementById('flash');
+
+        snapBtn.addEventListener('click', () => {
+            flash.style.opacity = '1';
+            
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                currentIndex++;
+                
+                if (currentIndex >= myPhotos.length) {
+                    currentIndex = 0;
+                }
+                
+                display.src = myPhotos[currentIndex];
+                
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+
+```
